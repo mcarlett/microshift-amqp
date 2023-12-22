@@ -18,7 +18,10 @@ public class MySpringBootRouter extends RouteBuilder {
             .filter(simple("${body} contains 'foo'"))
                 .to("log:foo")
             .end()
-            .to("stream:out");
+            .to("amqp:topic:notify");
+
+        from("amqp:topic:notify").routeId("consumer")
+                .to("log:consumer?plain=true");
     }
 
 }

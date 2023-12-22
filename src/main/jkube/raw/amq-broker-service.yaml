@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: amq-broker
+  labels:
+    app: amq-broker
+spec:
+  ports:
+    - name: amq-broker
+      protocol: TCP
+      port: 61616
+      targetPort: 61616
+  selector:
+    app: amq-broker
