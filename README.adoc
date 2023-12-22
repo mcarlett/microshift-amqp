@@ -2,15 +2,17 @@
 
 === run broker
 
-``
+[source,bash]
+----
 podman run --rm -e AMQ_USER=admin -e AMQ_PASSWORD=admin -e AMQ_REQUIRE_LOGIN=true -p 61616:61616 -p 8161:8161 registry.redhat.io/amq7/amq-broker-rhel8:7.11
-``
+----
 
 === run app
 
-``
+[source,bash]
+----
 mvn spring-boot:run
-``
+----
 
 == run OpenShift
 
@@ -21,23 +23,26 @@ mvn spring-boot:run
 
 === create project and set it as default
 
-``
+[source,bash]
+----
 oc new-project microshift-amqp
-``
+----
 
 === deploy and run app
 
 This command will use `openshift-maven-plugin` to deploy the amq-broker and the app.
 
-``
+[source,bash]
+----
 mvn clean install -Popenshift
-``
+----
 
 check logs
 
-``
+[source,bash]
+----
 oc logs -f deploymentconfig/microshift-amqp
-``
+----
 
 == run MicroShift
 
@@ -49,13 +54,15 @@ oc logs -f deploymentconfig/microshift-amqp
 
 === create namespace and set it as default
 
-``
+[source,bash]
+----
 oc create namespace microshift-amqp
-``
+----
 
-``
+[source,bash]
+----
 kubectl config set-context --current --namespace=microshift-amqp
-``
+----
 
 === deploy and run app
 
@@ -63,12 +70,19 @@ This command will use `openshift-maven-plugin` to deploy the amq-broker and the 
 
 The `jkube.docker.registry` property is used to set the remote image registry to use to push/pull the built image
 
-``
-mvn clean install -Pmicroshift -Djkube.docker.registry=quay.io/myuser -Djkube.docker.push.username=myusername -Djkube.docker.push.password=mypass
-``
+If the access to remote image registry is not configured in the local docker configuration, it is possible to provide `jkube.docker.push.username` and `jkube.docker.push.password`
+
+[source,bash]
+----
+mvn clean install -Pmicroshift \
+-Djkube.docker.registry=quay.io/myuser \
+-Djkube.docker.push.username=myusername \
+-Djkube.docker.push.password=mypass
+----
 
 check logs
 
-``
+[source,bash]
+----
 oc logs -f deployment/microshift-amqp
-``
+----
